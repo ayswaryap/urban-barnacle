@@ -6,7 +6,7 @@ cd cvx-w64;
 cvx_setup('cvx_license.dat');
 cd(cDirectory);
 
-cvx_solver('Mosek');
+cvx_solver('Sedumi');
 cvx_expert('true');
 cvx_quiet('true');
 
