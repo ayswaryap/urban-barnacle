@@ -32,38 +32,34 @@ text(X(1)-2,Y(1)-1, 'a', 'Color', 'Blue', 'FontWeight', 'Bold', 'FontSize', 16);
 
 %% 
 % ***********************************************************************************
-% ***********************************************************************************
-% ***********************************************************************************
-% 
 % Piece of code that estimates the four parameters of the ellipse using LS-estimation
+% ***********************************************************************************
 
+% ** LS Linear Estimator :- Y = HX+N is X^{hat} = inv(H'*H)*H'*Y ****
 
 %************ Observation matrices******************************
 
-Months = 12;
-Obs1 =[];
-Obs2 =[];
-for iMonth = 1:Months % recodered in 12 months 
-    Obs1 = [Obs1; cos(2*pi*iMonth/T) 1];
-    Obs2 = [Obs2; sin(2*pi*iMonth/T) 1];
+k = 12; %Given
+Obs1 =[]; %H0
+Obs2 =[]; %H1
+
+for K = 1:k % recodered in 12 months 
+    Obs1 = [Obs1; cos(2*pi*K/T) 1]; %T is the orbital period of a defined earlier
+    Obs2 = [Obs2; sin(2*pi*K/T) 1];
 end
 
-%******** LS estimate: R1 and C1**********************************
-LS_R1 = inv(Obs1' * Obs1) * Obs1' * X';
-LS_R2 = inv(Obs2' * Obs2) * Obs2' * Y';
 
-%  NOTE: The estimated parameters R1,R2,C1,C2 must be stored in a 4-element
-%  vector variable named P.
 
-P(1)=LS_R1(1);
-P(2)=LS_R2(1);
-P(3)=LS_R1(2);
-P(4)=LS_R2(2);
+%******** LS estimate: R1,C1 and R2,C2**********************************
 
-% ************************************************************************
-% ************************************************************************
-% ************************************************************************
+LS_R1 = inv(Obs1' * Obs1) * Obs1' * X'; %LS estimate for X_k
+LS_R2 = inv(Obs2' * Obs2) * Obs2' * Y'; %LS estimate of Y_k
 
+
+%  NOTE: The estimated parameters R1,R2,C1,C2 must be stored in a 4-element vector variable named P.
+
+
+P = [LS_R1(1) LS_R2(1) LS_R1(2) LS_R2(2)]
 
 h = ellipse(P(1), P(2), 0, P(3), P(4), 'b');
 set(h, 'LineStyle','--');
