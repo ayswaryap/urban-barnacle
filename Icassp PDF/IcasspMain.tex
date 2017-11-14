@@ -1,0 +1,219 @@
+\documentclass{article}
+\usepackage{spconf,amsmath,graphicx}
+
+\usepackage{amsmath,amssymb}
+\usepackage{acronym,etoolbox}
+\usepackage{graphicx,epstopdf}
+\usepackage[ruled]{algorithm2e}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage[subrefformat=parens,labelformat=parens,labelseparator=period,caption=false,font=footnotesize]{subfig}
+\usepackage{multirow,cite,setspace,fixltx2e,lineno,verbatim,mathtools,url,cases,algorithmic,subeqnarray}
+
+
+\def\x{{\mathbf x}}
+\def\L{{\cal L}}
+
+
+
+\title{User Grouping and Two Level Precoding for Dimensionality reduction in Massive MIMO}
+
+\name{{Ayswarya Padmanabhan, Antti T\"{o}lli, Markku Juntti}}%\thanks{Thanks to XYZ agency for funding.}}
+\address{Center for Wireless Communications (CWC),
+		Department of Communications Engineering (DCE)\\
+		University of Oulu, Finland - FI-90014\\
+	Email: firstname.lastname@oulu.fi}
+
+
+\input{acronyms}
+\input{shortcuts}
+
+\begin{document}
+
+	\maketitle
+\vspace{-1eM}
+\begin{abstract}
+We consider a 5G Massive \ac{MIMO} set-up with very large number of antennas. Large number of antennas results in higher dimensional complexity while performing conventional \ac{MIMO} processing. In this paper, we focus on fully digital two level beamforming, where the beamformer is divided into outer beamformer that depends on the second order channel statistics and the inner beamformer based on fast channel variations. The users are partitioned into groups based on their channel correlation matrix wherein co-located users forms the outer beamformer thereby efficiently reducing the channel dimension accounting to only group specific users. The main aim of outer beamformer is to reduce the dimensionality of the effective channel by exploiting the near-orthogonal channel covariance eigen spaces of different user groups. A two level precoding \ac{WSRM} problem is proposed for a single cell \ac{DL} system targeting at minimizing the inter-group and intra-group interferences, respectively. We also discuss different methods to form the outer precoder matrix for each group. Numerical simulations evaluates the performance of different group specific beamforming methods as a function of statistical beams.
+\end{abstract}
+%%
+%\begin{keywords}
+%	5G Massive \ac{MIMO} 
+%\end{keywords}
+%
+
+\section{Introduction}
+\label{sec:intro}
+
+Massive \ac{MIMO} is considered to be the future enabling technology for the 5G cellular communication \cite{ marzetta2010noncooperative, rusek2013scaling, boccardi2014five}. This system consist of large number of antenna elements which supports increased data rate, reliability, diversity, reduced interference and results in \ac{DoF} gain and beamforming gain. However, the down side of massive \ac{MIMO} is the increased computational complexity due to the large number of antennas. The conventional \ac{MIMO} processing involves higher dimensional matrix operations involving precoders and channel matrices. Moreover, to make use of the conventional processing such as \ac{MMSE} and \ac{ZF}, computation of matrix inverses are based on higher dimensional channel matrix are required. Moreover, these higher dimensional channel matrix requires accurate \ac{CSI}, which accounts to more complexity in \ac{CSI} acquisition.
+
+Complexity reduction in massive \ac{MIMO} has gained lot of attention among researchers. In recent years \ac{JSDM} has gained more focus and is a promising method for fully digital two level beamforming \cite{adhikary2013joint} which has importance in terms of complexity reduction. The main idea of \ac{JSDM} lies in the partitioning of the users into groups based on similar transmit correlation matrices so as to reduce the inter group interference with the users geographic location. In \cite{adhikary2013joint}, author discusses various methods to form the outer beamformer and discusses performance analysis using the techniques of deterministic equivalents for different types of group processing like joint group and per-group processing. In \cite{nam2014joint, nam2015user, xu2014user} \ac{JSDM} was studied extensively for user grouping. %\cite{nam2014joint} discusses the user grouping via minimum chordal distance, where as in \cite{nam2015user} user grouping utilizing  Fubini-study distance and in \cite{ xu2014user} weighted likelihood to enhance the group performance. 
+Several other techniques in addition to \ac{JSDM} for two level precoding is suggested, where \cite{liu2014hierarchical} the outer and the inner beamformers are used to control the inter and intra-cell interference, respectively. In \cite{arvola2016two}, two level precoding was explored for different heuristic methods and the performance was evaluated as a function of statistical pre-beams. 
+
+In our work, we formulate a \ac{WSRM} problem for a single cell \ac{DL} massive \ac{MIMO} system utilizing two level beamforming and user grouping. Following the approaches in \cite{venkatraman2017jp} we formulate the problem to optimize the inner precoder for the fast channel variations with a fixed outer precoder for each group. The outer precoder is fixed by using the eigen selection method mentioned in \cite{arvola2016two}. The beamformer design can be classified into group specific beamforming with centralized interference variables and group specific beamforming with fixed inter-group interference constant. Thus the outer beamforming matrix is chosen so as to minimize the interference across different groups and the inner precoder takes care of the interference within one group. The simulation results suggests how the group specific outer precoder dimension can be reduced for each group without impacting the achievable rate. 
+
+\vspace{-1eM}
+
+
+
+ %As a third variant group specific interference without inter-group interference constant can also be considered, where the optimization is carried out independently per each sub group without any interference constraint. However, we consider the resulting inter-group interference in the final \ac{SINR} calculations. 
+%This paper is organized as follows. Section \ref{sys_modl} presents the system model, followed by the subsections that discuss the \ref{chan_mod} channel model and \ref{usr_grp} the user grouping. In section \ref{pre_des}, we discuss the two level precoder design, with subsection \ref{outpre}, illustrating the outer precoder design for different heuristic methods based on total channel covariance and individual user covariance matrices and subsection \ref{inpre} elaborates the \ac{WSRM} problem, in order to optimize the inner precoder according to the fast channel variations with a given fixed outer precoder \textit{i.e.,} the effective channel. Following the problem formulation, in Section \ref{num_res}, numerical simulations are presented that shows the user grouping in two level precoding helps in the reduction of outer precoder dimension significantly without greatly impacting the achievable rate. Finally, in Section \ref{conclusion}, we conclude the paper.
+\vspace{-1.5eM}
+
+\section{System Model}
+\label{sys_modl}
+We consider a \ac{DL} single-cell \ac{MU} massive \ac{MIMO} system where a single \ac{BS} is equipped with \me{M} transmit antennas serving \me{K} single-antenna \ac{UT} with \me{M > K}. The set of all users is represented as \me{\mathcal{U}_k = \{ 1, \dotsc, K \}} and the users are grouped into \me{G} groups, where \me{G = M/K} and the number of users belonging to a group is \me{k_g = K/G}. The set of all groups is represented by \me{\mathcal{U}_g = \{1 , \dotsc, G\}} and the set of users belonging to a group is represented as \me{\mathcal{U}_{k_g} = \{ 1, \dotsc, K_g \}}. As a result of the user grouping, the received signal \me{y_{k_g}} of user \me{k_g \in g}, can be expressed as
+\begin{eqnarray} \label{icassp1}
+{y}_{k_g} &=& \underbrace{\mathbf{h}_{k_g}^H \mathbf{v}_{k_g} x_{k_g}}_{desired\, \, signal} + \underbrace{\sum_{i \in g,\backslash k_g} \mathbf{h}_{k_g}^H \mathbf{v}_{k_i} x_{k_i}}_{intra-group \, interference}\nonumber \\  &&+ \underbrace{\sum_{j \in G \backslash g} \mathbf{h}_{k_g}^H \mathbf{v}_{k_j} x_{k_j}}_{inter-group \, interference} + \mathbf{n}_{k_g}
+\end{eqnarray}  
+where the first term in \eqref{icassp1} is the desired signal while the second and third term represents the intra-group and inter-group interference. We assume the channel between the \ac{BS} and a user in group \me{\mathcal{U}_{k_g}} to be denoted as \me{\mathbf{h}_{k_g} \in \mathbb{C}^{M \times 1}} and assume the \me{M \times K_g} dimensional channel matrix with
+\me{\mathbf{H_g} = [ \mathbf{h}_{1,g},\dotsc,\mathbf{h}_{k,g} ] }, while \me{\mathbf{v}_{k_g} \in \mathbb{C}^{M \times 1}} denotes the precoding vector for user \me{k_g}. The transmitted data symbol for user \me{k_g \in \mathcal{U}_{k_g}} is denoted by \me{x_{k_g}} with \me{\mathbb{E}[|x_{k_g}|^2] \leq 1, \forall k_g \in \mathcal{U}_{k_g}}. \me{\mathbf{n}_{k_g}} represents the zero mean white Gaussian noise at the receiver with variance \me{N_0}. We can represent the data symbol \me{\mathbf{x}_{k_g} = \mathbf{V_gd_{k_g}}}, where \me{\mathbf{d}_{k_g}} is expressed by the \me{S_g \times 1} vector of transmitted user data symbols and \me{S_g = S/G} is the design parameter describing the amount of statistical pre-beams used for a group \me{\mathcal{U}_{k_g}}.
+
+We also assume that the precoding is applied in two levels as \me{\mathbf{V} = \mathbf{BW} } where \me{\mathbf{V} \in  \mathbb{C}^{M \times K} } is the total precoding matrix of all the users in \me{\sum_{{\mathcal{U}}_g} G}, where \me{\mathbf{B} \in \mathbb{C}^{M \times S}} is the outer precoder matrix of all users based on slow-varying channel statistics and \me{\mathbf{W} \in \mathbb{C}^{S\times K}} is the inner precoder matrix of all users applying multi-user processing based on effective channel \me{\bar{H} = \mathbf{H}^H \mathbf{B}} of dimensions \me{K \times S}. 
+\vspace{-1eM}
+
+% Since we group the users based on channel covariances, then the group specific two level precoding can be illustrated similar to the one with no group, \me{\mathbf{V}_g = \mathbf{B}_g \mathbf{W}_g } where \me{\mathbf{V}_g \in  \mathbb{C}^{M \times K_g},\, \,  \forall k_g \in \mathcal{U}_{k_g}} and \me{\mathbf{B} \in \mathbb{C}^{M \times S_g}}, Similarly, \me{\mathbf{W}_g \in \mathbb{C}^{S_g\times K_g}} is the inner precoder matrix of users \me{\forall k_g \in \mathcal{U}_{k_g}} applying multi-user processing based on effective channel \me{\bar{H}_g = \mathbf{H}_g^H \mathbf{B}_g} of dimensions \me{K_g \times S_g}. 
+\subsection{Channel Model}
+\label{chan_mod}
+\vspace{-1eM}
+The general channel vector \me{\mathbf{h}_k} for \me{K} users is modelled as the classical multipath model for \ac{ULA} \cite{molisch2012wireless}:
+\begin{equation}\label{icassp2}
+\mathbf{h}_k = \dfrac{\beta_k}{\sqrt{L}} \sum_{l=1}^{L} \mathbf{a}(\theta_{k,l})e^{j\phi_{k,l}},
+\end{equation}
+where \me{\beta_k} denotes the path loss between the \ac{BS} and the user \me{k}, \me{L} denotes the number of independent (and \ac{i.i.d}) paths, \me{\phi_{k,l}} is a random phase caused by the channel for path \me{l}, \ac{i.i.d} between different paths, and \me{\mathbf{a}(\theta)} is the array signature vector given by
+\begin{equation} \label{icassp3}
+\mathbf{a}(\theta) = \begin{bmatrix}1\\e^{j2\phi \frac{D}{\lambda}\cos(\theta)}\\. \\. \\. \\e^{j2\phi \frac{(M-1)D}{\lambda}\cos(\theta)}\end{bmatrix},
+\end{equation}
+where \me{D} is the \ac{BS} antenna spacing, \me{\lambda} is the carrier wavelength and \me{\theta} is the \ac{AoD}. The user specific channel correlation matrix can be defined as \me{\mathbf{R}_k = \mathbb{E}[\mathbf{h}_k \mathbf{h}_k^H]}, and the sum of all correlation matrices determine the total channel correlation matrix \me{\mathbf{R} = \sum_k \mathbf{R}_k }.
+\vspace{-1eM}
+\subsection{User Grouping}
+\label{usr_grp}
+
+In real life scenario, users cannot be naturally partitioned into groups. Here, we discuss how the users are grouped to form the outer precoding matrix \me{\mathbf{B}}. \me{K} users are partitioned into \me{G} groups based on the similarity of their channel correlation matrices. The channel vector for \me{k_g^{th}} user in group \me{g} is denoted as \me{\mathbf{h}_{k_g} = \frac{\beta_{k_g}}{\sqrt{L}} \sum_{l=1}^{L} \mathbf{a}(\theta_{{k_g},l})e^{j\phi_{{k_g},l}}} and for the overall \me{M \times K} system, channel matrix is denoted as \me{\mathbf{H} = [\mathbf{H}_1, \dotsc, \mathbf{H}_G]}. Since, we assume two level precoding for all groups \me{\mathcal{U}_g}, we denote the outer precoder matrix of group \me{\mathcal{U}_{k_g}} as \me{\mathbf{B}_g} of dimensions \me{M \times S_g}, such that \me{\sum_{g=1}^{G}S_g = S}, hence we have \me{\mathbf{B} = [\mathbf{B}_1, \dotsc, \mathbf{B}_g]} and the group specific channel correlation matrix as \me{R_{k_g}}.
+\vspace{-1eM}
+\subsubsection{DFT based Fixed Quantized User Grouping}
+\label{usr_grp2}
+In this method, the groups are predefined based on the geographical location and their channel scattering as discussed in \cite{nam2014joint}. Since, our approach of user grouping is for massive \ac{MIMO}, which is based on large number of antennas, the channel eigen spaces are considered to be mutually orthogonal as mentioned in \cite{adhikary2013joint}. Hence, the groups are chosen in a way such that the \ac{AoA}s \me{\theta_g} and \ac{AS} are fixed, so that the resulting groups are disjoint. This helps us in computing the eigen space corresponding to the newly constructed covariance matrix.  % Hence, in \cite{nam2014joint} it is proposed to use disjoint blocks of adjascent columns of unitary \ac{DFT} matrix as group subspaces. 
+
+As  a result of user grouping and two level precoding, the received signal can be expressed with the outer and inner group specific precoder as 
+\begin{eqnarray} \label{icassp4}
+{y}_{k_g} &=& \underbrace{\mathbf{h}_{k_g}^H \mathbf{B}_{k_g} \mathbf{w}_{k_g} x_{k_g}}_{desired signal} + \underbrace{\sum_{i \in g,\backslash k_g} \mathbf{h}_{k_g}^H \mathbf{B}_{k_i} \mathbf{w}_{k_i} x_{k_i}}_{intra-group \, interference}\nonumber \\  &&+ \underbrace{\sum_{j \in G \backslash g} \mathbf{h}_{k_g}^H \mathbf{B}_{k_j} \mathbf{w}_{k_j} x_{k_j}}_{inter-group \, interference} + \mathbf{n}_{k_g}.
+\end{eqnarray}  
+
+Thus, the \ac{SINR} of user \me{k_g} in group \me{g} can be expressed as 
+\begin{equation}\label{icassp5}
+\gamma_{k_g} = \dfrac{|\mathbf{h}_{k_g}^H \mathbf{B}_{k_g} \mathbf{w}_{k_g}|^2}{{|\displaystyle\sum_{i \in \mathcal{U}_g,\backslash K_g} \mathbf{h}_{k_g}^H \mathbf{B}_{k_i} \mathbf{w}_{k_i} |^2 + |\displaystyle\sum_{j \in G \backslash g} \mathbf{h}_{k_g}^H \mathbf{B}_{k_j} \mathbf{w}_{k_j} |^2 + N_0}}.
+\end{equation}
+
+Utilizing the \ac{SINR} expression in equation \eqref{icassp5}, we can determine the weighted sum-rate of the given system as
+\begin{equation}\label{icassp6}
+R = \sum_g \sum_{k_g} \alpha_{k_g} \log_2(1+\gamma_{k_g}) \approxeq \alpha_k \sum_k \log_2(1 + \gamma_k),
+\end{equation}
+where \me{\alpha_{k_g} \geq 0} is a user specific weight coefficient that can be determined with user scheduling. We use approximately symbol in \eqref{icassp6} since weighted sum rate of each user is equal to the weighted sum rate of group specific users. 
+%  is fixed for a certain block length As a general model of \ac{JSDM} is presented as follows. We assume that \me{\mc{K}_g \in K} \ac{UT} are selected to form \me{G} groups based on their similarity in channel correlation matrices. For simplicity we define the number of \ac{UT}in a group to be \me{\mc{K}_g = K/G } and the number of data streams per group to be \me{\hat{s} = S/G}.
+\vspace{-1eM}
+\section{Precoder Design}
+\label{pre_des}
+
+In this section, we discuss the joint beamformer design for the system discussed in \ref{sys_modl}. The joint optimization of outer precoder \me{\mathbf{B}} and the inner precoder \me{\mathbf{W}} is highly complex due to their time-scale variation. Hence, we design the outer and inner precoders separately, considering various heuristic approaches in constructing the outer precoder matrix \me{\mathbf{B}}. Furthermore, while optimizing the inner precoder, it is assumed that the outer precoder \me{\mathbf{B}} is fixed as it is based on the slow-varying channel statistics.  
+\vspace{-1eM}
+\subsection{Outer Precoder Design}
+\label{outpre}
+
+We consider the group specific outer precoder matrix \me{\mathbf{B}_g, \forall \mathcal{U}_{k_g} }, which is based on the slow-varying channel statistics, \textit{i.e.,} the user covariance matrices. Therefore the obvious solution is as mentioned in \cite{arvola2016two}, where the formulation of \me{\mathbf{B}_g} is to decompose the total channel covariance matrix via \ac{EVD}. In \ac{EVD}, the total channel covariance matrix is represented as \me{\mathbf{R}= \mathbf{U}\mathbf{\Lambda}\mathbf{U}^H,} and choose \me{S_g} channel covariance eigenvectors corresponding to the \me{S_g} largest eigenvalues. Thus the resulting outer precoder for a group \me{\mathcal{U}_{k_g}} is \me{\mathbf{B}_g = [\mathbf{u}_{g_1}, \dotsc, \mathbf{u}_{g_s}] \in \mathbb{C}^{M \times S_g}}, which effectively forms the pre-beams towards the strongest signal paths. 
+
+%As a variant, we also adopt a group specific \ac{DFT} based outer precoder design, as mentioned in \ref{usr_grp2}. For a large \me{M}, the eigenvectors of covariance matrix are approximated by the columns of a \ac{DFT} matrix \cite{adhikary2013joint}.  Using this approach the group specific outer precoder  \me{\mathbf{B}_g = \mathbf{U}^*_g, \forall \mathcal{U}_g}, where \me{\mathbf{U}^*_g} is the \me{M \times \mathbf{R}^*_g} tall unitary matrix of the \me{\mathbf{R}^*_g} dominate eigenvalues of the group \me{\mathcal{U}_{k_g}}.
+\vspace{-1eM}
+\subsection{Inner Precoder Design}
+\label{inpre}
+
+In order to formulate the problem of designing inner precoders with \ac{WSRM} objective, we consider including the constraint on total transmit power. By doing so, the \ac{WSRM} problem can be formulated as
+\begin{subeqnarray}\label{icassp7}
+\underset{\mathbf{w}_{k_g}} {\text{maximize}}  & \quad & \sum_g \prod_{k_g} (1+\gamma_{k_g})^{\alpha_{k_g}} \\
+\text{subject to}  && \sum_{g}\sum_{k_g} ||\mathbf{B}_g\mathbf{w}_{k_g}||^2 \leq P_{tot} \slabel{icassp7_b}
+\end{subeqnarray}
+where the \ac{SINR} expression \me{\gamma_{k_g}} is defined in equation \eqref{icassp5}. The constraint in equation \eqref{icassp7_b} is used to limit the total transmit power from the \ac{BS} to be within \me{P_{tot}}.  
+
+In general the precoder design for the \ac{MIMO} is difficult due to the non convex nature of the problem formulation \cite{luo2008dynamic}. In general, the rate maximizing beamformer designs has an inherent complexity due to existence of optimization variables, i.e., transmit precoders, in both the numerator and in the denominator of the \ac{SINR} expression as shown in \eqref{icassp5}. %In addition, the beamformer design can be classified into group specific beamforming with centralized interference variables and group specific beamforming with fixed inter-group interference constant. As a third variant group specific interference without inter-group interference constant can also be considered, where the optimization is carried out independently per each sub group without any interference constraint. However, we consider the resulting inter-group interference in the final \ac{SINR} calculations. 
+In particular, for a single receive antenna scenario, the goal of precoding is to maximize the received signal power at the intended terminal in a group while minimizing the interference caused to the others in the same group and the ones in other group.
+
+%\subsubsection{Group Specific Beamforming with centralized Interference variable}
+
+Here, we propose to design the group specific inner precoder with centralized interference variable. We introduce \me{t_{k_g}} as an under-estimator for the rate of the user \me{k_g, \forall g \in \mathcal{U}_g}. We also introduce a slack variable \me{b_{k_g}} for the denominator of the \ac{SINR} expression in \eqref{icassp5} and \me{\epsilon_g} as the total interference caused by the transmission from group \me{g \in \bar{\mathcal{U}_g}} to the users in group \me{\mathcal{U}_g}. Hence we can reformulate the optimization problem as 
+\begin{subeqnarray}\label{icassp8}
+\underset{t_{k_g}, \textit{b}_{k_g}, \mathbf{w}_{k_g}} {\text{maximize}}  & \quad & \sum_g \prod_{k_g} {t_{k_g}} \approxeq \prod_{k} {t_{k}} \\
+\text{subject to} && \nonumber \\
+&& \dfrac{|\mathbf{h}_{k_g}^H \mathbf{B}_{k_g} \mathbf{w}_{k_g}|^2}{\textit{b}_{k_g}} \geq \gamma_{k_g} \slabel{icassp8_a}\\
+\qquad \qquad && N_0  + \displaystyle\sum_{i \in \mathcal{U}_{k_g},\backslash k_g}| \mathbf{h}_{k_g}^H \mathbf{B}_{k_i} \mathbf{w}_{k_i} |^2  \nonumber \\  && \qquad  + 
+\displaystyle\sum_{g \in \bar{\mathcal{U}_g}} \epsilon_g %\displaystyle\sum_{j \in \mathcal{U}_g \backslash G} | \mathbf{h}_{k_g}^H \mathbf{B}_{k_j} \mathbf{w}_{k_j} |^2
+	\leq \textit{b}_{k_g}  \slabel{icassp8_b}\\
+&&\displaystyle\sum_{g \in \bar{\mathcal{U}_g}} \epsilon_g \geq \displaystyle\sum_{j \in \bar{\mathcal{U}_g}} | \mathbf{h}_{k_g}^H \mathbf{B}_{k_j} \mathbf{w}_{k_j} |^2 \slabel{icassp8_d}\\
+ && \sum_{g}\sum_{k_g} ||\mathbf{B}_g\mathbf{w}_{k_g}||^2 \leq P_{tot} \slabel{icassp8_c}
+\end{subeqnarray}
+since the expression in \eqref{icassp5} cannot be handled directly. We assume that the beamformer precision is high enough to guarantee sufficient accuracy. We observe that the equation \eqref{icassp8_a} gives an under-estimator of \me{\gamma_{k_g}} and equation \eqref{icassp8_b} gives the over-estimator for the total interference for the users \me{k_g} in group \me{\mathcal{U}_{k_g}}. In spite of relaxing the \ac{SINR} expression in \eqref{icassp5} with \eqref{icassp8_a} and \eqref{icassp8_b}, even then the problem is not convex due to \eqref{icassp8_a}. Hence, we adopt \ac{SCA} wherein each nonconvex subset is replaced by convex subset, which can be solved iteratively until convergence \cite{boyd2004convex}, \cite{scutari2017parallel}.
+
+The \ac{SINR} expression in \eqref{icassp8_a} can be represented equivalently for user \me{k_g} in group \me{\mathcal{U}_{k_g}} as  
+\begin{equation}\label{icassp9}
+\gamma_{k_g} \leq (\textit{b}_{k_g})^{-1} |\mathbf{h}_{k_g}^H \mathbf{B}_{k_g} \mathbf{w}_{k_g}|^2
+\end{equation} 
+
+However, the fractional term in \eqref{icassp9} is of the quadratic-over-linear form, and can be bounded by the linear first order Taylor's series expansion as follows
+\begin{multline}\label{icassp10}
+\dfrac{|\mathbf{h}_{k_g}^H \mathbf{B}_{k_g} \mathbf{w}_{k_g}|^2}{\textit{b}_{k_g}} \geq \mathcal{F}_{k_g}^{(i)} (\mathbf{w}_{k_g}, \textit{b}_{k_g};\mathbf{w}_{k_g}^{(i)}, \textit{b}_{k_g}^{(i)}) \triangleq \\ 2\dfrac{\mathbf{w}_{k_g}^{(i)}\mathbf{h}_{k_g}^H \mathbf{h}_{k_g}} {\textit{b}_{k_g}^{(i)}} \big( \mathbf{w}_{k_g} - \mathbf{w}_{k_g}^{(i)}\big) \\
+\dfrac{|\mathbf{h}_{k_g}^H \mathbf{B}_{k_g} \mathbf{w}_{k_g}^{(i)}|^2}{\textit{b}_{k_g}^{(i)}} \big( 1 - \dfrac{\textit{b}_{k_g} - \textit{b}_{k_g}^{(i)}}{\textit{b}_{k_g}^{(i)}} \big),
+\end{multline}
+where \me{\mathcal{F}_{k_g}^{(i)}(\mathbf{w}_{k_g}, \textit{b}_{k_g})} is the linear under-estimator for the \ac{r.h.s} term in \eqref{icassp9} and \me{\mathbf{w}_{k_g}^{(i)}, \textit{b}_{k_g}^{(i)}} are the operating points that are updated in each step by the solution obtained from the previous \ac{SCA} step. 
+
+After linearising the non convex constraints and by replacing \eqref{icassp8_a} with \eqref{icassp10}, and fixing the outer precoder \me{\mathbf{B}}, we can summarize the \ac{WSRM} problem as
+\begin{subeqnarray}\label{icassp11}
+\underset{t_{k}, \textit{b}_{k_g}, \mathbf{w}_{k_g}} {\text{maximize}}  & \quad & \prod_{k} {t_{k}}\\
+\text{subject to} && \nonumber \\
+&& \mathcal{F}_{k_g}^{(i)}(\mathbf{w}_{k_g}, \textit{b}_{k_g}) \geq \gamma_{k_g} \slabel{icassp11_a} \\
+&& \eqref{icassp7_b}\, \, \text{and}\, \,  \eqref{icassp8_b} 
+\end{subeqnarray}
+where \me{\gamma_{k_g}} is positive even after relaxation, since a negative value reduces \me{t_{k_g}} for a non zero beamformer entry \me{\mathbf{w}_{k_g}}, thereby utilizing the power without maximizing the objective. 
+
+
+
+\begin{comment}
+The modification into the design of group specific beamforming with fixed inter-group interference is straightforward. In \eqref{icassp11} the group interference terms are considered as a centralized entity. However, we can also consider that the inter-group interferences are constant \me{\epsilon_{k_g}}, thereby we can rewrite the \eqref{icassp8_b} as
+\begin{subeqnarray}\label{icassp12}
+&&N_0 +\sum_{i \in \mathcal{U}_{k_g},\backslash k_g}| \mathbf{h}_{k_g}^H \mathbf{B}_{k_i} \mathbf{w}_{k_i} |^2 +\sum_{j \in \mathcal{U}_g \backslash G} \epsilon_{j} \leq \textit{b}_{k_g} \quad \slabel{icassp12_a} \\
+ &&\sum_{j \in \mathcal{U}_g \backslash G} \epsilon_{j} \leq | \mathbf{h}_{k_g}^H \mathbf{B}_{k_j} \mathbf{w}_{k_j} |^2 \slabel{icassp12_b} 
+\end{subeqnarray}
+where \me{\epsilon_j} is the inter-group interference caused from group \me{g} to user in group \me{j}. The equation \eqref{icassp12_b} is the relaxed interference constraint which helps in relaxing the interference terms from the neighbouring group for each of the user \me{k_g \in g}.
+
+Now using \eqref{icassp12}, we can reformulate the \ac{WSRM} problem in \eqref{icassp11} as
+\begin{subeqnarray}
+\underset{t_{k}, \textit{b}_{k_g}, \mathbf{w}_{k_g}} {\text{maximize}}  & \quad & \prod_{k} {t_{k}} \\
+\text{subject to} && \nonumber \\
+%&& \mathcal{F}_{k_g}^{(i)}(\mathbf{w}_{k_g}, \textit{b}_{k_g}) \geq \gamma_{k_g} \\
+&& \eqref{icassp11_a}, \, \, \eqref{icassp7_b}, \, \, \eqref{icassp12_a}, \, \,\text{and}\, \,  \eqref{icassp12_b},	
+\end{subeqnarray}
+where we treat the inter-group interference term as a constant and observe how the optimal beamformer can be attained.  
+\vspace{-1eM}
+\end{comment}
+
+\section{Numerical Results}
+\label{num_res}
+
+
+\section{Conclusion}
+\label{conclusion}
+
+
+%\section{REFERENCES}
+%\label{sec:refs}
+
+
+
+% References should be produced using the bibtex program from suitable
+% BiBTeX files (here: strings, refs, manuals). The IEEEbib.bst bibliography
+% style file from IEEE produces unsorted bibliography list.
+% -------------------------------------------------------------------------
+\bibliographystyle{IEEEbib}
+\bibliography{references}
+
+%	\bibliographystyle{IEEEtranBST2/ieeetran}
+%\bibliography{IEEEtranBST2/IEEEabrv,references}
+
+\end{document}
+		

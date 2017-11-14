@@ -1,0 +1,95 @@
+\begin{thebibliography}{10}
+
+\bibitem{marzetta2010noncooperative}
+Thomas~L Marzetta,
+\newblock ``Noncooperative cellular wireless with unlimited numbers of base
+  station antennas,''
+\newblock {\em IEEE Transactions on Wireless Communications}, vol. 9, no. 11,
+  pp. 3590--3600, 2010.
+
+\bibitem{rusek2013scaling}
+Fredrik Rusek, Daniel Persson, Buon~Kiong Lau, Erik~G Larsson, Thomas~L
+  Marzetta, Ove Edfors, and Fredrik Tufvesson,
+\newblock ``Scaling up mimo: Opportunities and challenges with very large
+  arrays,''
+\newblock {\em IEEE Signal Processing Magazine}, vol. 30, no. 1, pp. 40--60,
+  2013.
+
+\bibitem{boccardi2014five}
+Federico Boccardi, Robert~W Heath, Angel Lozano, Thomas~L Marzetta, and Petar
+  Popovski,
+\newblock ``Five disruptive technology directions for 5g,''
+\newblock {\em IEEE Communications Magazine}, vol. 52, no. 2, pp. 74--80, 2014.
+
+\bibitem{adhikary2013joint}
+Ansuman Adhikary, Junyoung Nam, Jae-Young Ahn, and Giuseppe Caire,
+\newblock ``Joint spatial division and multiplexing—the large-scale array
+  regime,''
+\newblock {\em IEEE transactions on information theory}, vol. 59, no. 10, pp.
+  6441--6463, 2013.
+
+\bibitem{nam2014joint}
+Junyoung Nam, Ansuman Adhikary, Jae-Young Ahn, and Giuseppe Caire,
+\newblock ``Joint spatial division and multiplexing: Opportunistic beamforming,
+  user grouping and simplified downlink scheduling,''
+\newblock {\em IEEE Journal of Selected Topics in Signal Processing}, vol. 8,
+  no. 5, pp. 876--890, 2014.
+
+\bibitem{nam2015user}
+Junyoung Nam, Young-Jo Ko, and Jeongseok Ha,
+\newblock ``User grouping of two-stage mu-mimo precoding for clustered user
+  geometry,''
+\newblock {\em IEEE Communications Letters}, vol. 19, no. 8, pp. 1458--1461,
+  2015.
+
+\bibitem{xu2014user}
+Yi~Xu, Guosen Yue, Narayan Prasad, Sampath Rangarajan, and Shiwen Mao,
+\newblock ``User grouping and scheduling for large scale mimo systems with
+  two-stage precoding,''
+\newblock in {\em Communications (ICC), 2014 IEEE International Conference on}.
+  IEEE, 2014, pp. 5197--5202.
+
+\bibitem{liu2014hierarchical}
+An~Liu and Vincent Lau,
+\newblock ``Hierarchical interference mitigation for massive mimo cellular
+  networks,''
+\newblock {\em IEEE Transactions on Signal Processing}, vol. 62, no. 18, pp.
+  4786--4797, 2014.
+
+\bibitem{arvola2016two}
+Antti Arvola, Antti T{\"o}lli, and David Gesbert,
+\newblock ``Two-layer precoding for dimensionality reduction in massive mimo,''
+\newblock in {\em Signal Processing Conference (EUSIPCO), 2016 24th European}.
+  IEEE, 2016, pp. 2000--2004.
+
+\bibitem{venkatraman2017jp}
+Ganesh Venkatraman, Antti T{\"o}lli, Jarkko Kaleva, and Markku Juntti,
+\newblock ``Jp-comp with antenna selection for multi-carrier c-ran with finite
+  backhaul capacity,''
+\newblock in {\em Communications (ICC), 2017 IEEE International Conference on}.
+  IEEE, 2017, pp. 1--7.
+
+\bibitem{molisch2012wireless}
+Andreas~F Molisch,
+\newblock {\em Wireless communications}, vol.~34,
+\newblock John Wiley \& Sons, 2012.
+
+\bibitem{luo2008dynamic}
+Zhi-Quan Luo and Shuzhong Zhang,
+\newblock ``Dynamic spectrum management: Complexity and duality,''
+\newblock {\em IEEE Journal of Selected Topics in Signal Processing}, vol. 2,
+  no. 1, pp. 57--73, 2008.
+
+\bibitem{boyd2004convex}
+Stephen Boyd and Lieven Vandenberghe,
+\newblock {\em Convex optimization},
+\newblock Cambridge university press, 2004.
+
+\bibitem{scutari2017parallel}
+Gesualdo Scutari, Francisco Facchinei, and Lorenzo Lampariello,
+\newblock ``Parallel and distributed methods for constrained nonconvex
+  optimization-part i: Theory.,''
+\newblock {\em IEEE Trans. Signal Processing}, vol. 65, no. 8, pp. 1929--1944,
+  2017.
+
+\end{thebibliography}
