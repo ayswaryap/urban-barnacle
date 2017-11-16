@@ -9,7 +9,7 @@ for iBeamPerGroup = inParams.beamsPerGroup
     
     %SimParams.rng = inParams.rng;
     
-    rng('shuffle');
+    rng('default');
     cBeamIndex = cBeamIndex + 1;
         
     SimParams.frequency = inParams.frequency;    
