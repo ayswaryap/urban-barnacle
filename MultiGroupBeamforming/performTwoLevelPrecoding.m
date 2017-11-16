@@ -7,7 +7,9 @@ gParams = cell(length(inParams.beamsPerGroup),1);
 cBeamIndex = 0;
 for iBeamPerGroup = inParams.beamsPerGroup
     
-    rng('default');
+    %SimParams.rng = inParams.rng;
+    
+    rng('shuffle');
     cBeamIndex = cBeamIndex + 1;
         
     SimParams.frequency = inParams.frequency;    
